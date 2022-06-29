@@ -39,8 +39,8 @@ before_reboot () {
 after_reboot () {
     ## resuming from reboot
     echo "Resuming from reboot..."
-    # sed -i '/bash/d' ~/.bashrc ##removing the line from bashrc 
-    # rm -f /var/run/resume-aferboot
+    sed -i '/bash/d' ~/.bashrc ##removing the line from bashrc 
+    rm -f /var/run/resume-aferboot
 
     # ## reinstallin Nvidia
     # dnf remove *nvidia*
@@ -51,10 +51,11 @@ after_reboot () {
 }
 
 # script that runs first:
-## Check if user is part of sudoers group
-if [ $(id -u) != 0 ]
-then
-    echo "Script must be ran as root."
-else
 check_if_rebooted
-fi
+## Check if user is part of sudoers group
+# if [ $(id -u) != 0 ]
+# then
+#     echo "Script must be ran as root."
+# else
+# check_if_rebooted
+# fi
