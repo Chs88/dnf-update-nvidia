@@ -1,14 +1,22 @@
 #!/bin/bash
 
+scriptsource="$(readlink -f "$0")" ## path to this script
+
 ## Writing the functions
 
 check_if_rebooted () {
     ## check if the temporary file exists
     if [ ! -f /var/run/resume-aferboot ]
     then
+        sudo cp "$scriptsource" "/usr/local/bin" ##copies itself to /usr/bin for testing
+        # echo "file doesnt exist"
         before_reboot
+        
+
     else
+        # echo "file exists"
         after_reboot
+       
     fi
 }
 
@@ -19,28 +27,31 @@ check_if_rebooted () {
 before_reboot () {
         ##update the system
         apt update
+        # echo "updating"
         # dnf update -y
         #preparing for reboot
         script="bash /usr/local/bin/fixnvidia.sh"
         echo "$script" >> ~/.bashrc ##added script to bashrc
         ## creating temporary file to check
-        touch /var/run/resume-aferboot
+        sudo touch /var/run/resume-aferboot
         echo "Update complete!"
 
         ## rebooting
+        echo "Rebooting in 3..."
+        sleep 1
         echo "Rebooting in 2..."
         sleep 1
         echo "Rebooting in 1..."
         sleep 1
-        reboot
-
+        sudo reboot
+        
 }
 
 after_reboot () {
     ## resuming from reboot
     echo "Resuming from reboot..."
-    sed -i '/bash/d' ~/.bashrc ##removing the line from bashrc 
-    rm -f /var/run/resume-aferboot
+    sudo sed -i '/bash/d' ~/.bashrc ##removing the line from bashrc 
+    sudo rm -f /var/run/resume-aferboot
 
     # ## reinstallin Nvidia
     # dnf remove *nvidia*
